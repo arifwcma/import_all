@@ -4,13 +4,13 @@ from qgis.core import QgsProject
 
 
 class Plugin:
-    name = "ReloadProject"
+    name = "import_all"
 
     def __init__(self):
         self.action = None
 
     def initGui(self):
-        self.action = QAction("Reload Project", iface.mainWindow())
+        self.action = QAction("import_all", iface.mainWindow())
         self.action.setShortcut("Ctrl+R")
         self.action.triggered.connect(self.run)
         iface.addPluginToMenu(self.name, self.action)

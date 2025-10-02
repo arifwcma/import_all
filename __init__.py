@@ -5,6 +5,6 @@ if TYPE_CHECKING:
 
 
 def classFactory(iface: "QgisInterface"):  # noqa N802
-    from reloadproject.plugin import Plugin
+    from import_all.plugin import Plugin
 
     return Plugin()

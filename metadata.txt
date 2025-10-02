@@ -1,0 +1,16 @@
+[general]
+name=import_all
+description=
+about=
+version=0.1.0
+qgisMinimumVersion=3.16
+author=
+email=
+changelog=
+tags=
+repository=https://github.com/wcma-gis/import_all
+tracker=https://github.com/wcma-gis/import_all/issues
+homepage=https://github.com/wcma-gis/import_all
+category=Plugins
+experimental=True
+deprecated=False

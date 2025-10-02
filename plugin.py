@@ -1,25 +1,38 @@
-from qgis.PyQt.QtWidgets import QAction
-from qgis.utils import iface
-from qgis.core import QgsProject
+import os
+from qgis.PyQt.QtWidgets import QAction, QFileDialog
+from qgis.core import QgsProject, QgsVectorLayer, QgsRasterLayer
 
 
 class Plugin:
-    name = "import_all"
-
-    def __init__(self):
+    def __init__(self, iface):
+        self.iface = iface
         self.action = None
 
     def initGui(self):
-        self.action = QAction("import_all", iface.mainWindow())
+        self.action = QAction("Import All Layers", self.iface.mainWindow())
         self.action.setShortcut("Ctrl+R")
         self.action.triggered.connect(self.run)
-        iface.addPluginToMenu(self.name, self.action)
+        self.iface.addPluginToMenu("import_all", self.action)
 
     def unload(self):
-        iface.removePluginMenu(self.name, self.action)
+        self.iface.removePluginMenu("import_all", self.action)
 
     def run(self):
-        p = QgsProject.instance().fileName()
-        if p:
-            QgsProject.instance().read(p)
-            print("Project reloaded")
+        folder = QFileDialog.getExistingDirectory(
+            self.iface.mainWindow(), "Select Folder with Layers"
+        )
+        if not folder:
+            return
+
+        exts = {".shp", ".geojson", ".kml", ".tif"}
+        for root, _, files in os.walk(folder):
+            for f in files:
+                path = os.path.join(root, f)
+                ext = os.path.splitext(f)[1].lower()
+                if ext in exts:
+                    if ext == ".tif":
+                        layer = QgsRasterLayer(path, os.path.basename(path))
+                    else:
+                        layer = QgsVectorLayer(path, os.path.basename(path), "ogr")
+                    if layer.isValid():
+                        QgsProject.instance().addMapLayer(layer)
